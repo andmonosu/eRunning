@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "627560886869",
+    "project_id": "erunning-andmonosu",
+    "storage_bucket": "erunning-andmonosu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627560886869:android:29ed42c11e9a910d331adc",
+        "android_client_info": {
+          "package_name": "com.andmonosu.erunning"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "627560886869-98nbkgc6e8rm4rn5f9ftpt0i8bpikli3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7dIzJ6d36Tz1Pl4tpC-T7Di69_jpKmDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "627560886869-98nbkgc6e8rm4rn5f9ftpt0i8bpikli3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
