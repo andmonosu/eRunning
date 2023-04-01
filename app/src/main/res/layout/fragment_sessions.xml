@@ -6,17 +6,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.SessionsFragment">
 
+
+    <TextView
+        android:id="@+id/monthTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/calendarView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="hola" />
+
     <com.kizitonwose.calendar.view.CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cv_dayViewResource="@layout/calendar_day_layout"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/sessionTv"
+        app:cv_monthHeaderResource="@layout/calendar_day_titles_container"
+        app:layout_constraintTop_toBottomOf="@+id/monthTv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        >
-    </com.kizitonwose.calendar.view.CalendarView>
+        />
     <TextView
         android:id="@+id/sessionTv"
         android:layout_width="match_parent"
