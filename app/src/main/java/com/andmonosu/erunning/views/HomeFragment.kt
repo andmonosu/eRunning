@@ -14,8 +14,7 @@ import com.andmonosu.erunning.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class HomeFragment : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
+    private var email: String? = null
 
     private var isRunning:Boolean = false
     private lateinit var chronometer:Chronometer
@@ -23,8 +22,7 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(NAME_BUNDLE)
-            param2 = it.getString(ADDRESS_BUNDLE)
+            email = it.getString("EMAIL_BUNDLE")
         }
 
     }
@@ -60,16 +58,14 @@ class HomeFragment : Fragment() {
 
     companion object {
 
-        private const val NAME_BUNDLE:String = "name_bundle"
-        private const val ADDRESS_BUNDLE:String = "name_bundle"
+        const val EMAIL_BUNDLE = ""
 
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
+        fun newInstance(email: String) =
+            ProfileFragment().apply {
                 arguments = Bundle().apply {
-                    putString(NAME_BUNDLE, param1)
-                    putString(ADDRESS_BUNDLE, param2)
+                    putString(EMAIL_BUNDLE, email)
                 }
-           }
+            }
     }
 }

@@ -1,6 +1,7 @@
 package com.andmonosu.erunning.views
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.core.view.children
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.SessionObjectiveState
 import com.andmonosu.erunning.databinding.FragmentSessionsBinding
+import com.google.firebase.firestore.FirebaseFirestore
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
@@ -24,19 +26,20 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 class SessionsFragment : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
+    private var email: String? = null
 
     private lateinit var binding: FragmentSessionsBinding
     private lateinit var monthTv:TextView
+    private lateinit var pruebaTv:TextView
     private val currentMonth = YearMonth.now()
     private val monthCalendarView: CalendarView get() = binding.calendarView
+    private var db = FirebaseFirestore.getInstance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            email = it.getString("EMAIL_BUNDLE")
         }
     }
 
@@ -54,37 +57,57 @@ class SessionsFragment : Fragment() {
     private fun initComponents(view: View?) {
         if (view != null) {
             monthTv = view.findViewById(R.id.monthTv)
+            pruebaTv = view.findViewById(R.id.pruebaTv)
         }
     }
 
     private fun initCalendar(view:View) {
 
         monthCalendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
+
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, data: CalendarDay) {
-                val day = data
+                container.calendarView = monthCalendarView
+                container.day = data
                 val textView = container.textView
-                textView.text = day.date.dayOfMonth.toString()
-                if (day.position == DayPosition.MonthDate) {
-                    val state = SessionObjectiveState.valueOf("SUCCESS")
+                val selectedDate = container.selectedDate
 
-                    when (state) {
-                        SessionObjectiveState.SUCCESS -> {
-                            textView.setTextColor(resources.getColor(R.color.white))
-                            textView.setBackgroundResource(R.drawable.session_succed_background)
-                        }
-                        SessionObjectiveState.NOT_SUCCESS -> {
-                            textView.setTextColor(resources.getColor(R.color.white))
-                            textView.setBackgroundResource(R.drawable.session_not_succed_background)
-                        }
-                        SessionObjectiveState.NOT_TRAINED -> {
-                            textView.setTextColor(resources.getColor(R.color.white))
-                            textView.setBackgroundResource(R.drawable.session_not_trained_background)
-                        }
-                    }
-                } else {
+                textView.text = data.date.dayOfMonth.toString()
+                if (data.position == DayPosition.MonthDate) {
+                    textView.visibility = View.VISIBLE
+                        db.collection("users").document(email ?: "").collection("sessions")
+                            .document(data.date.toString()).get().addOnSuccessListener { result ->
+                            val state = (result.get("state") as String?)?.let {
+                                SessionObjectiveState.valueOf(
+                                    it
+                                )
+                            }
+                                if (data.date == selectedDate&&state!=null) {
+                                    textView.setTextColor(resources.getColor(R.color.white))
+                                    textView.setBackgroundResource(R.drawable.session_selected_background)
+                                    pruebaTv.text = (result.get("hola") as String?)
+                                } else {
+                                    when (state) {
+                                        SessionObjectiveState.SUCCESS -> {
+                                            textView.setTextColor(resources.getColor(R.color.white))
+                                            textView.setBackgroundResource(R.drawable.session_succed_background)
+                                        }
+                                        SessionObjectiveState.NOT_SUCCESS -> {
+                                            textView.setTextColor(resources.getColor(R.color.white))
+                                            textView.setBackgroundResource(R.drawable.session_not_succed_background)
+                                        }
+                                        SessionObjectiveState.NOT_TRAINED -> {
+                                            textView.setTextColor(resources.getColor(R.color.white))
+                                            textView.setBackgroundResource(R.drawable.session_not_trained_background)
+                                        }
+                                        else -> {}
+                                    }
+                                }
+                            }
+                }else {
                     textView.visibility = View.INVISIBLE
                 }
+
             }
         }
         val startMonth = currentMonth.minusMonths(100)
@@ -133,15 +156,14 @@ class SessionsFragment : Fragment() {
     }
 
     companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
+
+        const val EMAIL_BUNDLE = ""
 
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SessionsFragment().apply {
+        fun newInstance(email: String) =
+            ProfileFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putString(EMAIL_BUNDLE, email)
                 }
             }
     }
