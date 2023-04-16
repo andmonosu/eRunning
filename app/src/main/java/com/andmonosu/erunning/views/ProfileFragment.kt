@@ -1,5 +1,6 @@
 package com.andmonosu.erunning.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -26,13 +27,14 @@ class ProfileFragment : Fragment() {
     private var provider: String? = null
     private var db = FirebaseFirestore.getInstance()
 
-    private lateinit var tvProvider: TextView
-    private lateinit var tvEmail: TextView
     private lateinit var btnLogout: Button
     private lateinit var btnSave: Button
-    private lateinit var btnDelete: Button
-    private lateinit var btnGet: Button
+    private lateinit var tvName: TextView
     private lateinit var etHeight: EditText
+    private lateinit var etEmail: EditText
+    private lateinit var etAge: EditText
+    private lateinit var etGender: EditText
+    private lateinit var etActivity: EditText
     private lateinit var etWeight: EditText
 
 
@@ -50,24 +52,36 @@ class ProfileFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
         initComponents(view)
-        setup(email ?: "", provider ?: "")
-
-        //Guardar datos
-
+        initUI(email?: "")
+        setup(email ?: "")
         val prefs =
             activity?.getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
                 ?.edit()
         if (prefs != null) {
             prefs.putString("email", email)
-            prefs.putString("provider", provider)
             prefs.apply()
         }
         return view
     }
 
-    private fun setup(email: String, provider: String) {
-        tvProvider.text = provider
-        tvEmail.text = email
+    private fun initUI(email: String) {
+        db.collection("users").document(email).get().addOnSuccessListener { result ->
+            val name = result.get("name") as String
+            val lastName = result.get("lastName") as String
+            tvName.setText(name + " " +lastName)
+            etEmail.setText(email)
+            etGender.setText(result.get("gender") as String)
+            val age = result.get("age") as Number
+            etAge.setText(age.toString())
+            val height = result.get("height") as Number
+            etHeight.setText(height.toString())
+            val weight = result.get("peso") as Number
+            etWeight.setText(weight.toString())
+            etActivity.setText(result.get("sport activity") as String)
+        }
+    }
+
+    private fun setup(email: String) {
 
         btnLogout.setOnClickListener {
 
@@ -85,28 +99,21 @@ class ProfileFragment : Fragment() {
 
         btnSave.setOnClickListener{
             db.collection("users").document(email).set(
-                hashMapOf("provider" to provider, "peso" to etWeight.text.toString(),"height" to etHeight.text.toString())
+                hashMapOf("peso" to etWeight.text.toString(),"height" to etHeight.text.toString(),"age" to etAge.text.toString(),"gender" to etGender.text.toString(), "activity" to etActivity.toString())
             )
-        }
-        btnDelete.setOnClickListener{
-
-        }
-        btnGet.setOnClickListener{
-            db.collection("users").document(email).collection("entrenamientos").document("1").get().addOnSuccessListener {
-                etHeight.setText(it.get("duracion") as String?)
-            }
         }
     }
 
     private fun initComponents(view: View) {
-        tvProvider = view.findViewById(R.id.tvProvider)
-        tvEmail = view.findViewById(R.id.tvEmail)
+        tvName = view.findViewById(R.id.tvName)
+        etEmail = view.findViewById(R.id.etEmail)
         btnLogout = view.findViewById(R.id.btnLogout)
-        btnDelete = view.findViewById(R.id.btnDelete)
         btnSave = view.findViewById(R.id.btnSave)
-        btnGet = view.findViewById(R.id.btnGet)
         etHeight = view.findViewById(R.id.etHeight)
         etWeight = view.findViewById(R.id.etWeight)
+        etAge = view.findViewById(R.id.etAge)
+        etGender = view.findViewById(R.id.etGender)
+        etActivity = view.findViewById(R.id.etActivity)
     }
 
 
