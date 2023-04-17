@@ -29,4 +29,8 @@
     <string name="your_height">Tu estatura</string>
     <string name="your_activity">Tu actividad</string>
     <string name="my_plans">Mis Planes</string>
+    <string name="name">Nombre</string>
+    <string name="lastName">Apellidos</string>
+    <string name="uPhoto">Upload Photo</string>
+    <string name="next">Siguiente</string>
 </resources>

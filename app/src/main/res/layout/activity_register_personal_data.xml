@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.RegisterPersonalDataActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/registerPersonalDataLayoutRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="25dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvImageRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:cardCornerRadius="100dp"
+            android:layout_marginEnd="5dp"
+            android:layout_gravity="center"
+            >
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivProfilePhotoRegister"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@mipmap/default_profile_photo"
+                android:alpha="0.70"
+                />
+
+
+            <TextView
+                android:id="@+id/tvUPhotoRegister"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:gravity="center"
+                android:text="@string/uPhoto"
+                android:textColor="@color/dark_grey"
+                android:visibility="visible"
+                />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etNameRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            android:layout_marginBottom="16dp"
+            />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etLastNameRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/lastName"
+            android:layout_marginBottom="16dp"
+            />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etEmailRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="@string/email"
+            />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etPasswordRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:layout_marginBottom="16dp"
+            android:inputType="textPassword"
+            />
+        <Button
+            android:id="@+id/btnNextRegister"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

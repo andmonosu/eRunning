@@ -7,11 +7,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
-import com.andmonosu.erunning.views.RegisterActivity
+import com.andmonosu.erunning.views.RegisterPersonalDataActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -70,17 +68,7 @@ class AuthActivity : AppCompatActivity() {
         val email = etEmail.text
         val password = etPassword.text
         btnRegister.setOnClickListener {
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                FirebaseAuth.getInstance()
-                    .createUserWithEmailAndPassword(email.toString(), password.toString())
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            showRegister(it.result?.user?.email ?: "", ProviderType.BASIC)
-                        } else {
-                            showAlert()
-                        }
-                    }
-            }
+            showRegister()
         }
 
         btnLogin.setOnClickListener {
@@ -108,17 +96,13 @@ class AuthActivity : AppCompatActivity() {
     private fun showHome(email: String, provider: ProviderType) {
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra("email", email)
-            putExtra("provider", provider.name)
         }
         startActivity(intent)
 
     }
 
-    private fun showRegister(email: String, provider: ProviderType) {
-        val intent = Intent(this, RegisterActivity::class.java).apply {
-            putExtra("email", email)
-            putExtra("provider", provider.name)
-        }
+    private fun showRegister() {
+        val intent = Intent(this, RegisterPersonalDataActivity::class.java)
         startActivity(intent)
 
     }
