@@ -3,6 +3,8 @@ package com.andmonosu.erunning.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,11 +13,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.andmonosu.erunning.AuthActivity
 import com.andmonosu.erunning.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.io.File
 
 enum class ProviderType {
     BASIC, GOOGLE
@@ -36,6 +42,7 @@ class ProfileFragment : Fragment() {
     private lateinit var etGender: EditText
     private lateinit var etActivity: EditText
     private lateinit var etWeight: EditText
+    private lateinit var ivProfilePhoto: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +85,12 @@ class ProfileFragment : Fragment() {
             val weight = result.get("peso") as Number
             etWeight.setText(weight.toString())
             etActivity.setText(result.get("sport activity") as String)
+            val storageRef = FirebaseStorage.getInstance().reference.child("users/$email.jpg")
+            val localFile = File.createTempFile("tempImage","jpg")
+            storageRef.getFile(localFile).addOnSuccessListener{
+                val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
+                ivProfilePhoto.setImageBitmap(bitmap)
+            }
         }
     }
 
@@ -114,6 +127,7 @@ class ProfileFragment : Fragment() {
         etAge = view.findViewById(R.id.etAge)
         etGender = view.findViewById(R.id.etGender)
         etActivity = view.findViewById(R.id.etActivity)
+        ivProfilePhoto = view.findViewById(R.id.ivProfilePhoto)
     }
 
 

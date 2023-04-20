@@ -3,19 +3,22 @@ package com.andmonosu.erunning.views
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import com.andmonosu.erunning.AuthActivity
 import com.andmonosu.erunning.MainActivity
 import com.andmonosu.erunning.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.slider.RangeSlider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import java.text.DecimalFormat
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterTrainingDataActivity : AppCompatActivity() {
 
     private var isMaleSelected:Boolean = true
     private var isFemaleSelected:Boolean = false
@@ -45,7 +48,7 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register_data)
+        setContentView(R.layout.activity_register_training_data)
 
         initComponents()
         initListeners()
@@ -143,13 +146,13 @@ class RegisterActivity : AppCompatActivity() {
     private fun navigateToHome(){
         val extras = intent.extras
         val email = extras?.getString("email")
-        val provider = extras?.getString("provider")
-        val navigate = Intent(this, MainActivity::class.java)
+        val navigate = Intent(this, AuthActivity::class.java)
         val gender = getGender()
         db.collection("users").document(email.toString()).set(
-            hashMapOf("provider" to provider, "peso" to currentWeight,"height" to currentHeight,"gender" to gender,"age" to currentAge, "sport activity" to currentSportActivity)
-        )
-        startActivity(navigate)
+            hashMapOf("peso" to currentWeight,"height" to currentHeight,"gender" to gender,"age" to currentAge, "sport activity" to currentSportActivity), SetOptions.merge()
+        ).addOnSuccessListener {
+            startActivity(navigate)
+        }
     }
 
     private fun setWeight() {

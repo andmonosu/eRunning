@@ -39,7 +39,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".views.RegisterActivity"
+            android:name=".views.RegisterPersonalDataActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.RegisterTrainingDataActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
