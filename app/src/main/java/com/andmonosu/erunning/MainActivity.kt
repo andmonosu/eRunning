@@ -27,11 +27,15 @@ class MainActivity : AppCompatActivity() {
         val provider = extras?.getString("provider")
         binding.navBar.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.navTraining -> replaceFragment(HomeFragment())
+                R.id.navTraining -> replaceFragment(HomeFragment().apply {
+                    this.arguments = bundleOf("EMAIL_BUNDLE" to email)
+                })
                 R.id.navProfile -> replaceFragment(ProfileFragment().apply {
                     this.arguments = bundleOf("EMAIL_BUNDLE" to email, "PROVIDER_BUNDLE" to provider)
                 })
-                R.id.navSessions -> replaceFragment(SessionsFragment())
+                R.id.navSessions -> replaceFragment(SessionsFragment().apply {
+                    this.arguments = bundleOf("EMAIL_BUNDLE" to email)
+                })
                 else -> {
 
                 }

@@ -28,7 +28,6 @@ enum class ProviderType {
 }
 
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var email: String? = null
     private var provider: String? = null
     private var db = FirebaseFirestore.getInstance()
