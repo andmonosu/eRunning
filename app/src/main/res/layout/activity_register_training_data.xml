@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="16dp"
     android:paddingVertical="32dp"
-    tools:context=".views.RegisterActivity"
+    tools:context=".views.RegisterTrainingDataActivity"
     android:background="@color/background_app"
     >
 
