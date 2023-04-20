@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import com.andmonosu.erunning.AuthActivity
 import com.andmonosu.erunning.MainActivity
 import com.andmonosu.erunning.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -145,7 +146,7 @@ class RegisterTrainingDataActivity : AppCompatActivity() {
     private fun navigateToHome(){
         val extras = intent.extras
         val email = extras?.getString("email")
-        val navigate = Intent(this, MainActivity::class.java)
+        val navigate = Intent(this, AuthActivity::class.java)
         val gender = getGender()
         db.collection("users").document(email.toString()).set(
             hashMapOf("peso" to currentWeight,"height" to currentHeight,"gender" to gender,"age" to currentAge, "sport activity" to currentSportActivity), SetOptions.merge()
