@@ -46,11 +46,10 @@ class AuthActivity : AppCompatActivity() {
     private fun session() {
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         val email = prefs.getString("email", null)
-        var provider = prefs.getString("provider", null)
 
-        if (email != null && provider != null) {
+        if (email != null) {
             authLayout.visibility = View.INVISIBLE
-            showHome(email, ProviderType.valueOf(provider))
+            showHome(email)
         }
     }
 
@@ -77,7 +76,7 @@ class AuthActivity : AppCompatActivity() {
                     .signInWithEmailAndPassword(email.toString(), password.toString())
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
-                            showHome(it.result?.user?.email ?: "", ProviderType.BASIC)
+                            showHome(it.result?.user?.email ?: "")
                         } else {
                             showAlert()
                         }
@@ -93,7 +92,7 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun showHome(email: String, provider: ProviderType) {
+    private fun showHome(email: String) {
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra("email", email)
         }
@@ -129,7 +128,7 @@ class AuthActivity : AppCompatActivity() {
                     FirebaseAuth.getInstance().signInWithCredential(credential)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
-                                showHome(account.email ?: "", ProviderType.GOOGLE)
+                                showHome(account.email ?: "")
                             } else {
                                 showAlert()
                             }

@@ -111,8 +111,8 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundLayerName" value="default_profile_photo" />
                                       <entry key="legacyIconShape" value="CIRCLE" />
+                                      <entry key="outputName" value="default_profile_photo" />
                                     </map>
                                   </option>
                                 </PersistentState>
