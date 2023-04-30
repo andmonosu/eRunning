@@ -8,25 +8,71 @@
 
         <TextView
             android:id="@+id/chronometerTitle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/chronometerTitle"
             android:textSize="35sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/chronometer"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
             />
+        <TextView
+            android:id="@+id/tvDistanceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/distance"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/chronometerTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="15dp"
+            />
+
+        <TextView
+            android:id="@+id/tvDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="0 metres"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/chronometerTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDistanceTitle"
+            />
+        <TextView
+            android:id="@+id/tvPaceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pace"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/chronometerTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDistance"
+            android:layout_marginTop="15dp"
+            />
+
+        <TextView
+            android:id="@+id/tvPace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="0 min/km"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/chronometerTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPaceTitle"
+            />
         <Chronometer
             android:id="@+id/chronometer"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="40sp"
             android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/chronometerTitle"
             android:layout_marginStart="20dp"
@@ -43,5 +89,14 @@
             android:layout_marginBottom="50dp"
             app:backgroundTint="@color/background_button"
             />
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/mapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
