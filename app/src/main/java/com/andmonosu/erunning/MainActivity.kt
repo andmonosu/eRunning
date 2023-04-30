@@ -21,17 +21,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        replaceFragment(HomeFragment())
         val extras = intent.extras
         val email = extras?.getString("email")
-        val provider = extras?.getString("provider")
+        replaceFragment(HomeFragment().apply {
+            this.arguments = bundleOf("EMAIL_BUNDLE" to email)
+        })
         binding.navBar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.navTraining -> replaceFragment(HomeFragment().apply {
                     this.arguments = bundleOf("EMAIL_BUNDLE" to email)
                 })
                 R.id.navProfile -> replaceFragment(ProfileFragment().apply {
-                    this.arguments = bundleOf("EMAIL_BUNDLE" to email, "PROVIDER_BUNDLE" to provider)
+                    this.arguments = bundleOf("EMAIL_BUNDLE" to email)
                 })
                 R.id.navSessions -> replaceFragment(SessionsFragment().apply {
                     this.arguments = bundleOf("EMAIL_BUNDLE" to email)

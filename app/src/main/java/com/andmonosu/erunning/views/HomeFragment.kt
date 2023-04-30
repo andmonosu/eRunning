@@ -56,23 +56,32 @@ class HomeFragment : Fragment() {
 
     private fun initListeners() {
         btnSession.setOnClickListener{
+            val currentDate = LocalDate.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val dateNow = currentDate.format(formatter)
             isRunning = !isRunning
             if (isRunning){
-                chronometer.setBase(SystemClock.elapsedRealtime())
-                mapsFragment.startTracking()
-                mapsFragment.map.clear()
-                chronometer.start()
+                db.collection("users").document(email?:"").collection("sessions").document(dateNow.toString()).get().addOnCompleteListener { task ->
+                    if(task.isSuccessful){
+                        val document = task.result
+                        if (document!=null&&document.exists()) {
+                            Toast.makeText(requireActivity(), "Ya has entrenado hoy, mejor descansa", Toast.LENGTH_SHORT).show()
+                        }else{
+                            chronometer.setBase(SystemClock.elapsedRealtime())
+                            mapsFragment.startTracking()
+                            mapsFragment.map.clear()
+                            chronometer.start()
+                        }
+                    }
+                }
             }else{
                 val timeElapsed = SystemClock.elapsedRealtime() - chronometer.base
                 var timeElapsedInMinutes = timeElapsed / 60000.0
                 timeElapsedInMinutes = round(timeElapsedInMinutes*100)/100.0
                 chronometer.stop()
                 mapsFragment.stopTracking()
-                val currentDate = LocalDate.now()
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 val distance = mapsFragment.ui.value?.formattedDistance
                 val pace = mapsFragment.ui.value?.formattedPace
-                val dateNow = currentDate.format(formatter)
                 db.collection("users").document(email?:"").collection("sessions").document(dateNow.toString()).set(
                     hashMapOf("distancia" to distance,"ritmo" to pace,"tiempo" to "$timeElapsedInMinutes min")
                 ).addOnSuccessListener {

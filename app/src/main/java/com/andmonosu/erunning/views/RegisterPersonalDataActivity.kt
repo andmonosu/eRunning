@@ -71,10 +71,12 @@ class RegisterPersonalDataActivity : AppCompatActivity() {
                     val storageReference = storage.child("users/$email.jpg")
 
                     val imageFile = imagePath?.let { it1 -> File(it1) }
-                    storageReference.putFile(Uri.fromFile(imageFile))
-                        .addOnFailureListener {
-                            Toast.makeText(this, "Error al subir imagen", Toast.LENGTH_SHORT).show()
-                        }
+                    if(imageFile != null) {
+                        storageReference.putFile(Uri.fromFile(imageFile))
+                            .addOnFailureListener {
+                                Toast.makeText(this, "Error al subir imagen", Toast.LENGTH_SHORT).show()
+                            }
+                    }
                 }else{
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle("Warning")
