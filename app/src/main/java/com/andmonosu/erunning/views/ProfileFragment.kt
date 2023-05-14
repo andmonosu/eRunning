@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.provider.Telephony.Mms.Intents
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.andmonosu.erunning.AuthActivity
+import com.andmonosu.erunning.MainActivity
 import com.andmonosu.erunning.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,6 +36,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var btnLogout: Button
     private lateinit var btnSave: Button
+    private lateinit var btnPlans: Button
     private lateinit var tvName: TextView
     private lateinit var etHeight: EditText
     private lateinit var etEmail: EditText
@@ -58,6 +61,7 @@ class ProfileFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
         initComponents(view)
+        initListener()
         initUI(email?: "")
         setup(email ?: "")
         val prefs =
@@ -70,11 +74,20 @@ class ProfileFragment : Fragment() {
         return view
     }
 
+    private fun initListener() {
+        btnPlans.setOnClickListener {
+            val intent = Intent(activity, MyPlansActivity::class.java).apply {
+                putExtra("email", email)
+            }
+            startActivity(intent)
+        }
+    }
+
     private fun initUI(email: String) {
         db.collection("users").document(email).get().addOnSuccessListener { result ->
             val name = result.get("name") as String
             val lastName = result.get("lastName") as String
-            tvName.setText(name + " " +lastName)
+            tvName.text = "$name $lastName"
             etEmail.setText(email)
             etGender.setText(result.get("gender") as String)
             val age = result.get("age") as Number
@@ -121,6 +134,7 @@ class ProfileFragment : Fragment() {
         etEmail = view.findViewById(R.id.etEmail)
         btnLogout = view.findViewById(R.id.btnLogout)
         btnSave = view.findViewById(R.id.btnSave)
+        btnPlans = view.findViewById(R.id.btnPlans)
         etHeight = view.findViewById(R.id.etHeight)
         etWeight = view.findViewById(R.id.etWeight)
         etAge = view.findViewById(R.id.etAge)

@@ -221,7 +221,6 @@
                     />
                 <Button
                     android:id="@+id/btnPlans"
-
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:text="@string/my_plans"
