@@ -38,4 +38,5 @@
     <string name="pace_value">%f min/km</string>
     <string name="distance">Distancia:</string>
     <string name="pace">Ritmo medio:</string>
+    <string name="objective">¿Cuál es tu objetivo?</string>
 </resources>

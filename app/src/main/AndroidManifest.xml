@@ -9,15 +9,29 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.ERunning"
         tools:targetApi="31">
         <activity
-            android:name=".PlanByQuestionsActivity"
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".views.NewPlanConfiguration"
             android:exported="false" />
         <activity
-            android:name=".MyPlansActivity"
+            android:name=".views.PlanByQuestionsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.MyPlansActivity"
             android:exported="false" />
 
         <meta-data
@@ -25,16 +39,8 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-        <activity
             android:name=".AuthActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
         </activity>
         <activity
             android:name=".views.RegisterPersonalDataActivity"
