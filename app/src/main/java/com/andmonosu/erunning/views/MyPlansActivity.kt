@@ -3,7 +3,6 @@ package com.andmonosu.erunning.views
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import com.andmonosu.erunning.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -19,9 +18,10 @@ class MyPlansActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
+        val email = intent.extras?.getString("email")
         btnSession.setOnClickListener {
             val intent = Intent(this, PlanByQuestionsActivity::class.java).apply {
-                putExtra("email",  extras?.getString("email"))
+                    putExtra("email",  email)
             }
             startActivity(intent)
         }
