@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -29,6 +30,7 @@ class PlanByQuestionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_by_questions)
         email = intent.extras?.getString("email").toString()
+        Log.i("email", email)
         initComponents()
         initListeners()
         initUI()
@@ -53,11 +55,11 @@ class PlanByQuestionsActivity : AppCompatActivity() {
             }else if(answer2.isEmpty()){
                 if(firstClicked==1){
                     db.collection("users").document(email?:"").collection("plans").document("1")
-                        .set(hashMapOf("distance" to answer1, "duration" to btnOpt2.text.toString())).addOnCompleteListener { task ->
+                        .set(hashMapOf("distance" to answer1, "duration" to btnOpt1.text.toString())).addOnCompleteListener { task ->
                         if(task.isSuccessful){
                             Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
                             startActivity(Intent(this, MyPlansActivity::class.java).apply {
-                                putExtra("email",  extras?.getString("email"))
+                                putExtra("email",  email)
                             })
                         }else if(task.isCanceled) {
                             Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
@@ -65,19 +67,61 @@ class PlanByQuestionsActivity : AppCompatActivity() {
                         }
                     }
                 }else if(firstClicked==2){
-
+                    db.collection("users").document(email?:"").collection("plans").document("1")
+                        .set(hashMapOf("distance" to answer1, "duration" to btnOpt1.text.toString())).addOnCompleteListener { task ->
+                            if(task.isSuccessful){
+                                Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                    putExtra("email",  email)
+                                })
+                            }else if(task.isCanceled) {
+                                Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
                 }else if(firstClicked==3){
-
+                    db.collection("users").document(email?:"").collection("plans").document("1")
+                        .set(hashMapOf("distance" to answer1, "duration" to "12 semanas", "objective" to btnOpt1.text.toString())).addOnCompleteListener { task ->
+                            if(task.isSuccessful){
+                                Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                    putExtra("email", email)
+                                })
+                            }else if(task.isCanceled) {
+                                Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
                 }else if(firstClicked==4){
-
+                    answer2 = btnOpt4.text.toString()
+                    btnOpt1.text = "3 horas"
+                    btnOpt2.text = "3:30 horas"
+                    btnOpt3.text = "4 horas"
+                    btnOpt4.text = "4:30 horas"
+                    secondClicked = 1
                 }
             }else if(answer3.isEmpty()){
-
+                db.collection("users").document(email?:"").collection("plans").document("1")
+                    .set(hashMapOf("distance" to answer1, "duration" to answer2, "objective" to btnOpt1.text.toString())).addOnCompleteListener { task ->
+                        if(task.isSuccessful){
+                            Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                putExtra("email",  email)
+                            })
+                        }else if(task.isCanceled) {
+                            Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
             }
         }
         btnOpt2.setOnClickListener {
             if(answer1.isEmpty()){
                 answer1 = btnOpt2.text.toString()
+                btnOpt1.text = "6 semanas"
+                btnOpt2.text = "8 semanas"
+                btnOpt3.text = "10 semanas"
+                btnOpt4.text = "11 semanas"
                 firstClicked=2
             }else if(answer2.isEmpty()){
                 if(firstClicked==1){
@@ -86,7 +130,7 @@ class PlanByQuestionsActivity : AppCompatActivity() {
                             if(task.isSuccessful){
                                 Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
                                 startActivity(Intent(this, MyPlansActivity::class.java).apply {
-                                    putExtra("email",  extras?.getString("email"))
+                                    putExtra("email",  email)
                                 })
                             }else if(task.isCanceled) {
                                 Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
@@ -94,28 +138,76 @@ class PlanByQuestionsActivity : AppCompatActivity() {
                             }
                         }
                 }else if(firstClicked==2){
-
-                }else if(firstClicked==3){
-
-                }else if(firstClicked==4){
-
-                }
-            }else if(answer3.isEmpty()){
-
-            }
-        }
-        btnOpt3.setOnClickListener {
-            if(answer1.isEmpty()){
-                answer1 = btnOpt3.text.toString()
-                firstClicked=3
-            }else if(answer2.isEmpty()){
-                if(firstClicked==1){
                     db.collection("users").document(email?:"").collection("plans").document("1")
                         .set(hashMapOf("distance" to answer1, "duration" to btnOpt2.text.toString())).addOnCompleteListener { task ->
                             if(task.isSuccessful){
                                 Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
                                 startActivity(Intent(this, MyPlansActivity::class.java).apply {
-                                    putExtra("email",  extras?.getString("email"))
+                                    putExtra("email",  email)
+                                })
+                            }else if(task.isCanceled) {
+                                Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                }else if(firstClicked==3){
+                    db.collection("users").document(email?:"").collection("plans").document("1")
+                        .set(hashMapOf("distance" to answer1, "duration" to "12 semanas", "objective" to btnOpt2.text.toString())).addOnCompleteListener { task ->
+                            if(task.isSuccessful){
+                                Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                    putExtra("email",  email)
+                                })
+                            }else if(task.isCanceled) {
+                                Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                }else if(firstClicked==4){
+                    db.collection("users").document(email?:"").collection("plans").document("1")
+                        .set(hashMapOf("distance" to answer1, "duration" to btnOpt2.text.toString())).addOnCompleteListener { task ->
+                            if(task.isSuccessful){
+                                Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                    putExtra("email",  email)
+                                })
+                            }else if(task.isCanceled) {
+                                Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                }
+            }else if(answer3.isEmpty()){
+                db.collection("users").document(email?:"").collection("plans").document("1")
+                    .set(hashMapOf("distance" to answer1, "duration" to answer2, "objective" to btnOpt2.text.toString())).addOnCompleteListener { task ->
+                        if(task.isSuccessful){
+                            Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                putExtra("email",  email)
+                            })
+                        }else if(task.isCanceled) {
+                            Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+            }
+        }
+        btnOpt3.setOnClickListener {
+            if(answer1.isEmpty()){
+                answer1 = btnOpt3.text.toString()
+                btnOpt1.text = "Menos de 1:30h"
+                btnOpt2.text = "Menos de 2h"
+                btnOpt3.isVisible = false
+                btnOpt4.isVisible = false
+                firstClicked=3
+            }else if(answer2.isEmpty()){
+                if(firstClicked==1){
+                    db.collection("users").document(email?:"").collection("plans").document("1")
+                        .set(hashMapOf("distance" to answer1, "duration" to btnOpt3.text.toString())).addOnCompleteListener { task ->
+                            if(task.isSuccessful){
+                                Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                    putExtra("email", email)
                                 })
                             }else if(task.isCanceled) {
                                 Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
@@ -123,30 +215,77 @@ class PlanByQuestionsActivity : AppCompatActivity() {
                             }
                         }
                 }else if(firstClicked==2){
-
-                }else if(firstClicked==3){
-
+                    db.collection("users").document(email?:"").collection("plans").document("1")
+                        .set(hashMapOf("distance" to answer1, "duration" to btnOpt3.text.toString())).addOnCompleteListener { task ->
+                            if(task.isSuccessful){
+                                Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                    putExtra("email",  email)
+                                })
+                            }else if(task.isCanceled) {
+                                Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
                 }else if(firstClicked==4){
-
+                    db.collection("users").document(email?:"").collection("plans").document("1")
+                        .set(hashMapOf("distance" to answer1, "duration" to btnOpt3.text.toString())).addOnCompleteListener { task ->
+                            if(task.isSuccessful){
+                                Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                    putExtra("email",  email)
+                                })
+                            }else if(task.isCanceled) {
+                                Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
                 }
             }else if(answer3.isEmpty()){
-
+                db.collection("users").document(email?:"").collection("plans").document("1")
+                    .set(hashMapOf("distance" to answer1, "duration" to answer2, "objective" to btnOpt3.text.toString())).addOnCompleteListener { task ->
+                        if(task.isSuccessful){
+                            Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                putExtra("email",  email)
+                            })
+                        }else if(task.isCanceled) {
+                            Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
             }
         }
         btnOpt4.setOnClickListener {
             if(answer1.isEmpty()){
                 answer1 = btnOpt4.text.toString()
+                btnOpt1.text = "12 semanas"
+                btnOpt2.text = "16 semanas"
+                btnOpt3.text = "20 semanas"
+                btnOpt4.isVisible = false
                 firstClicked=4
             }else if(answer2.isEmpty()){
                 if(firstClicked==2){
-
-                }else if(firstClicked==3){
-
-                }else if(firstClicked==4){
-
+                    answer2 = btnOpt4.text.toString()
+                    btnOpt1.text = "40 minutos"
+                    btnOpt2.text = "45 minutos"
+                    btnOpt3.text = "50 minutos"
+                    btnOpt4.text = "55 minutos"
+                    secondClicked = 4
                 }
             }else if(answer3.isEmpty()){
-
+                db.collection("users").document(email?:"").collection("plans").document("1")
+                    .set(hashMapOf("distance" to answer1, "duration" to answer2, "objective" to btnOpt4.text.toString())).addOnCompleteListener { task ->
+                        if(task.isSuccessful){
+                            Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                                putExtra("email",  email)
+                            })
+                        }else if(task.isCanceled) {
+                            Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
             }
         }
     }

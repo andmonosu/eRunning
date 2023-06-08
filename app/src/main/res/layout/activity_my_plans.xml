@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".views.MyPlansActivity">
 
+    <ImageButton
+        android:id="@+id/imgBtnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/back_arrow"
+        android:background="@null"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnSession"
         android:layout_width="wrap_content"
