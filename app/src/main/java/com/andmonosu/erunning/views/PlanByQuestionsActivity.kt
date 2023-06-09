@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.andmonosu.erunning.R
+import com.andmonosu.erunning.models.Training
 import com.google.firebase.firestore.FirebaseFirestore
 
 class PlanByQuestionsActivity : AppCompatActivity() {
@@ -54,10 +55,22 @@ class PlanByQuestionsActivity : AppCompatActivity() {
                 firstClicked=1
             }else if(answer2.isEmpty()){
                 if(firstClicked==1){
-                    db.collection("users").document(email?:"").collection("plans").document("1")
-                        .set(hashMapOf("distance" to answer1, "duration" to btnOpt1.text.toString())).addOnCompleteListener { task ->
+                    val plan =  db.collection("users").document(email?:"").collection("plans").document("1")
+                        plan.set(hashMapOf("distance" to answer1, "duration" to btnOpt1.text.toString())).addOnCompleteListener { task ->
                         if(task.isSuccessful){
                             Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                            val training = Training()
+                            training.setPlan5Km8Weeks()
+                            var i = 0
+                            while (i<training.trainingWeeks.size){
+                                val week = training.trainingWeeks[i]
+                                for(day in week.days){
+                                    plan.collection("weeks").document((i+1).toString()).collection("days").document(day.day.toString()).set(
+                                        hashMapOf("type" to day.type, "time" to day.time, "distance" to day.distance, "pace" to day.pace)
+                                    )
+                                }
+                                i++
+                            }
                             startActivity(Intent(this, MyPlansActivity::class.java).apply {
                                 putExtra("email",  email)
                             })
@@ -66,14 +79,14 @@ class PlanByQuestionsActivity : AppCompatActivity() {
                                 .show()
                         }
                     }
+
+
                 }else if(firstClicked==2){
                     db.collection("users").document(email?:"").collection("plans").document("1")
                         .set(hashMapOf("distance" to answer1, "duration" to btnOpt1.text.toString())).addOnCompleteListener { task ->
                             if(task.isSuccessful){
                                 Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
-                                startActivity(Intent(this, MyPlansActivity::class.java).apply {
-                                    putExtra("email",  email)
-                                })
+
                             }else if(task.isCanceled) {
                                 Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
                                     .show()
