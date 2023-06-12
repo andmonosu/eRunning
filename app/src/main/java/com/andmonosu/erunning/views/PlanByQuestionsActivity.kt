@@ -3,13 +3,13 @@ package com.andmonosu.erunning.views
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.models.Training
+import com.andmonosu.erunning.models.TrainingProvider
 import com.google.firebase.firestore.FirebaseFirestore
 
 class PlanByQuestionsActivity : AppCompatActivity() {
@@ -55,17 +55,20 @@ class PlanByQuestionsActivity : AppCompatActivity() {
                 firstClicked=1
             }else if(answer2.isEmpty()){
                 if(firstClicked==1){
-                    val plan =  db.collection("users").document(email?:"").collection("plans").document("1")
-                        plan.set(hashMapOf("distance" to answer1, "duration" to btnOpt1.text.toString())).addOnCompleteListener { task ->
+                    val training = Training(TrainingProvider.plan5km8weeks,"Plan 2", false)
+                    val plan =  db.collection("users").document(email?:"").collection("plans").document("2")
+                        plan.set(hashMapOf("distance" to answer1, "duration" to btnOpt1.text.toString(), "title" to training.name, "isActive" to training.isActive)).addOnCompleteListener { task ->
                         if(task.isSuccessful){
                             Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
-                            val training = Training()
-                            training.setPlan5Km8Weeks()
                             var i = 0
                             while (i<training.trainingWeeks.size){
                                 val week = training.trainingWeeks[i]
+                                val weekRef =  plan.collection("weeks").document((i+1).toString())
+                                weekRef.set(
+                                    hashMapOf("title" to "Semana "+i)
+                                )
                                 for(day in week.days){
-                                    plan.collection("weeks").document((i+1).toString()).collection("days").document(day.day.toString()).set(
+                                    weekRef.collection("days").document(day.day.toString()).set(
                                         hashMapOf("type" to day.type, "time" to day.time, "distance" to day.distance, "pace" to day.pace)
                                     )
                                 }

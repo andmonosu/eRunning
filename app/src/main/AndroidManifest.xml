@@ -15,9 +15,12 @@
         android:theme="@style/Theme.ERunning"
         tools:targetApi="31">
         <activity
+            android:name=".views.PlanDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:exported="true" >
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,8 +43,7 @@
 
         <activity
             android:name=".AuthActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".views.RegisterPersonalDataActivity"
             android:exported="false" />

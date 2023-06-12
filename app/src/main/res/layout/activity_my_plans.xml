@@ -31,5 +31,14 @@
         app:backgroundTint="@color/background_button"
         />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPlans"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/imgBtnBack"
+        android:layout_marginTop="15dp"
+
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
