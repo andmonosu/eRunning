@@ -45,7 +45,7 @@ class MyPlansActivity : AppCompatActivity() {
         initListeners()
     }
 
-    fun initRecyclerView(){
+    private fun initRecyclerView(){
         val manager = LinearLayoutManager(this)
         val decoration = DividerItemDecoration(this, manager.orientation)
         val recyclerView = findViewById<RecyclerView>(R.id.rvPlans)
@@ -78,7 +78,7 @@ class MyPlansActivity : AppCompatActivity() {
                 weeksDocs.addOnSuccessListener { weeks ->
                     val getWeeksTasks = mutableListOf<Task<QuerySnapshot>>()
                     for (weekDoc in weeks) {
-                        val week = TrainingWeek()
+                        val week = TrainingWeek(name = weekDoc.data["title"].toString())
                         val daysDocs = weekDoc.reference.collection("days").get()
                         getWeeksTasks.add(daysDocs)
                         daysDocs.addOnSuccessListener { days ->
@@ -132,7 +132,7 @@ class MyPlansActivity : AppCompatActivity() {
 
     private fun initListeners() {
         btnSession.setOnClickListener {
-            val intent = Intent(this, PlanByQuestionsActivity::class.java).apply {
+            val intent = Intent(this, NewPlanSelectActivity::class.java).apply {
                     putExtra("email",  email)
             }
             startActivity(intent)

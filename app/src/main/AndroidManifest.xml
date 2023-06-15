@@ -15,6 +15,9 @@
         android:theme="@style/Theme.ERunning"
         tools:targetApi="31">
         <activity
+            android:name=".views.NewPlanSelectActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.PlanDetailsActivity"
             android:exported="false" />
         <activity
@@ -28,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".views.NewPlanConfiguration"
+            android:name=".views.NewPlanConfigurationActivity"
             android:exported="false" />
         <activity
             android:name=".views.PlanByQuestionsActivity"
@@ -43,7 +46,7 @@
 
         <activity
             android:name=".AuthActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".views.RegisterPersonalDataActivity"
             android:exported="false" />

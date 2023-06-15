@@ -122,11 +122,11 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
         }
 
-        btnSave.setOnClickListener{
-            db.collection("users").document(email).set(
-                hashMapOf("peso" to etWeight.text.toString(),"height" to etHeight.text.toString(),"age" to etAge.text.toString(),"gender" to etGender.text.toString(), "activity" to etActivity.toString())
-            )
-        }
+       // btnSave.setOnClickListener{
+       //     db.collection("users").document(email).set(
+         //       hashMapOf("peso" to etWeight.text.toString(),"height" to etHeight.text.toString(),"age" to etAge.text.toString(),"gender" to etGender.text.toString(), "activity" to etActivity.toString())
+       //     )
+     //   }
     }
 
     private fun initComponents(view: View) {

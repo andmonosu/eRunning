@@ -14,7 +14,7 @@ class TrainingProvider {
                     TrainingDay(DayOfWeek.FRIDAY,SessionType.REST),
                     TrainingDay(DayOfWeek.SATURDAY,SessionType.REST_OR_TROT_WALK),
                     TrainingDay(DayOfWeek.SUNDAY,SessionType.WALK, time = 60)
-                )
+                ) , "Semana 1"
             ),
             TrainingWeek(
                 mutableListOf(
@@ -25,7 +25,7 @@ class TrainingProvider {
                     TrainingDay(DayOfWeek.FRIDAY,SessionType.REST),
                     TrainingDay(DayOfWeek.SATURDAY,SessionType.REST_OR_TROT_WALK),
                     TrainingDay(DayOfWeek.SUNDAY,SessionType.WALK, time = 60)
-                )
+                ), "Semana 2"
             ),
             TrainingWeek(
                 mutableListOf(
@@ -36,7 +36,7 @@ class TrainingProvider {
                     TrainingDay(DayOfWeek.FRIDAY,SessionType.REST),
                     TrainingDay(DayOfWeek.SATURDAY,SessionType.REST_OR_TROT_WALK),
                     TrainingDay(DayOfWeek.SUNDAY,SessionType.WALK, time = 60)
-                )
+                ), "Semana 3"
             ),
             TrainingWeek(
                 mutableListOf(
@@ -47,7 +47,7 @@ class TrainingProvider {
                     TrainingDay(DayOfWeek.FRIDAY,SessionType.REST),
                     TrainingDay(DayOfWeek.SATURDAY,SessionType.REST_OR_TROT_WALK),
                     TrainingDay(DayOfWeek.SUNDAY,SessionType.WALK, time = 60)
-                )
+                ), "Semana 4"
             ),
             TrainingWeek(
                 mutableListOf(
@@ -58,7 +58,7 @@ class TrainingProvider {
                     TrainingDay(DayOfWeek.FRIDAY,SessionType.REST),
                     TrainingDay(DayOfWeek.SATURDAY,SessionType.REST_OR_TROT_WALK),
                     TrainingDay(DayOfWeek.SUNDAY,SessionType.WALK, time = 60)
-                )
+                ), "Semana 5"
             ),
             TrainingWeek(
                 mutableListOf(
@@ -69,7 +69,7 @@ class TrainingProvider {
                     TrainingDay(DayOfWeek.FRIDAY,SessionType.REST),
                     TrainingDay(DayOfWeek.SATURDAY,SessionType.REST_OR_TROT_WALK),
                     TrainingDay(DayOfWeek.SUNDAY,SessionType.WALK, time = 60)
-                )
+                ), "Semana 6"
             ),
             TrainingWeek(
                 mutableListOf(
@@ -80,7 +80,7 @@ class TrainingProvider {
                     TrainingDay(DayOfWeek.FRIDAY,SessionType.REST),
                     TrainingDay(DayOfWeek.SATURDAY,SessionType.REST_OR_TROT_WALK),
                     TrainingDay(DayOfWeek.SUNDAY,SessionType.WALK, time = 60)
-                )
+                ), "Semana 7"
             ),
             TrainingWeek(
                 mutableListOf(
@@ -91,7 +91,7 @@ class TrainingProvider {
                     TrainingDay(DayOfWeek.FRIDAY,SessionType.REST),
                     TrainingDay(DayOfWeek.SATURDAY,SessionType.REST_OR_TROT_WALK),
                     TrainingDay(DayOfWeek.SUNDAY,SessionType.WALK, time = 60)
-                )
+                ), "Semana 8"
             )
         )
 

@@ -5,4 +5,4 @@ import kotlinx.android.parcel.Parcelize
 import java.time.DayOfWeek
 
 @Parcelize
-data class TrainingDay(val day:DayOfWeek, val type: SessionType, val time:Number = -1, val distance:Double = -1.0, val pace:Double = -1.0):Parcelable
+data class TrainingDay(val day:DayOfWeek, var type: SessionType, var time:Number = -1, var distance:Double = -1.0, var pace:Double = -1.0):Parcelable

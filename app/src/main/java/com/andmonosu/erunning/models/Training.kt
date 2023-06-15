@@ -6,6 +6,6 @@ import java.io.Serializable
 
 @Parcelize
 data class Training(
-    var trainingWeeks:MutableList<TrainingWeek> = mutableListOf(), val name:String="None",
+    var trainingWeeks:MutableList<TrainingWeek> = mutableListOf(), var name:String="None",
     val isActive: Boolean = false) : Parcelable
 

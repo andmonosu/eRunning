@@ -1,18 +1,34 @@
 package com.andmonosu.erunning.views
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.andmonosu.erunning.R
+import com.andmonosu.erunning.models.SessionType
 import com.andmonosu.erunning.models.Training
 import com.andmonosu.erunning.models.TrainingWeek
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_plan_details.tvDetailsDistance
 import java.time.DayOfWeek
+
 
 class PlanDetailsActivity : AppCompatActivity() {
 
+    private var db = FirebaseFirestore.getInstance()
     private lateinit var training: Training
     private lateinit var trainingWeekSelected: TrainingWeek
     private lateinit var tvTrainingDetailsName:TextView
@@ -32,16 +48,29 @@ class PlanDetailsActivity : AppCompatActivity() {
     private lateinit var cardSunday:CardView
     private lateinit var cardDaySelected:CardView
     private lateinit var tvDaySelected:TextView
-    private lateinit var etDetailsType:EditText
+    private lateinit var spDetailsType:Spinner
     private lateinit var etDetailsTime:EditText
     private lateinit var etDetailsPace:EditText
     private lateinit var etDetailsDistance:EditText
+    private lateinit var tvDetailsDistance:TextView
+    private lateinit var tvDetailsPace:TextView
+    private lateinit var tvDetailsTime:TextView
+    private lateinit var spWeekSelect: Spinner
+    private lateinit var btnEditCreatePlan:Button
+    private var isCreating:Boolean = false
+    private var isEditing:Boolean = false
+    private lateinit var email:String
+    private var daySelected = DayOfWeek.MONDAY
+    private var isChanging = false
+    private lateinit var adapterType: ArrayAdapter<SessionType>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_details)
         training = intent.getParcelableExtra("training")!!
+        isCreating = intent.getBooleanExtra("isCreating", false)
+        email = intent.extras?.getString("email").toString()
         initComponent()
         initUI()
         initListeners()
@@ -49,33 +78,142 @@ class PlanDetailsActivity : AppCompatActivity() {
 
     private fun initListeners() {
         cardMonday.setOnClickListener {
-            changeSelectedDay(cardMonday,tvMonday)
+            isChanging = true
             showDayInformation(DayOfWeek.MONDAY)
+            changeSelectedDay(cardMonday,tvMonday)
+            setType()
+            isChanging = false
         }
         cardTuesday.setOnClickListener {
+            isChanging = true
             changeSelectedDay(cardTuesday,tvTuesday)
             showDayInformation(DayOfWeek.TUESDAY)
+            setType()
+            isChanging = false
         }
         cardWednesday.setOnClickListener {
+            isChanging = true
             changeSelectedDay(cardWednesday,tvWednesday)
             showDayInformation(DayOfWeek.WEDNESDAY)
+            isChanging = false
         }
         cardThursday.setOnClickListener {
+            isChanging = true
             changeSelectedDay(cardThursday,tvThursday)
             showDayInformation(DayOfWeek.THURSDAY)
+            setType()
+            isChanging = false
         }
         cardFriday.setOnClickListener {
-            changeSelectedDay(cardFriday,tvFriday)
+            isChanging = true
             showDayInformation(DayOfWeek.FRIDAY)
-        }
-        cardSaturday.setOnClickListener {
-            changeSelectedDay(cardSaturday,tvSaturday)
-            showDayInformation(DayOfWeek.SATURDAY)
+            changeSelectedDay(cardFriday,tvFriday)
+            setType()
+            isChanging = false
 
         }
+        cardSaturday.setOnClickListener {
+            isChanging = true
+            changeSelectedDay(cardSaturday,tvSaturday)
+            showDayInformation(DayOfWeek.SATURDAY)
+            setType()
+            isChanging = false
+        }
         cardSunday.setOnClickListener {
+            isChanging = true
             changeSelectedDay(cardSunday,tvSunday)
             showDayInformation(DayOfWeek.SUNDAY)
+            setType()
+            isChanging = false
+        }
+
+        etDetailsTime.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                if((isCreating || isEditing)&&!isChanging) {
+                    for ((i, day) in trainingWeekSelected.days.withIndex()) {
+                        val time = s.toString().toIntOrNull()
+                        if (day.day == daySelected && time != null) {
+                            trainingWeekSelected.days[i].time = time
+                        }
+                    }
+                    changeWeekValue()
+                }
+            }
+        })
+
+        etDetailsDistance.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                if((isCreating || isEditing)&&!isChanging) {
+                    for ((i, day) in trainingWeekSelected.days.withIndex()) {
+                        val distance = s.toString().toDoubleOrNull()
+                        if (day.day == daySelected && distance != null) {
+                            trainingWeekSelected.days[i].distance = distance
+                        }
+                    }
+                    changeWeekValue()
+                }
+            }
+        })
+        etDetailsPace.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                if((isCreating || isEditing)&&!isChanging){
+                    for((i, day) in trainingWeekSelected.days.withIndex()){
+                        val pace = s.toString().toDoubleOrNull()
+                        if(day.day == daySelected && pace !=null){
+                            trainingWeekSelected.days[i].pace = pace
+                        }
+                    }
+                    changeWeekValue()
+                }
+            }
+        })
+
+        btnEditCreatePlan.setOnClickListener {
+            if(!isCreating){
+                if(!isEditing){
+                    changeEnableET(true)
+                }else{
+                    val plansRef = db.collection("users").document(email).collection("plans")
+                    savePlan(plansRef,training)
+                    changeEnableET(false)
+                }
+                isEditing = !isEditing
+            }else{
+                val plansRef = db.collection("users").document(email).collection("plans")
+                savePlan(plansRef,training)
+            }
+        }
+    }
+
+    private fun changeWeekValue(){
+        for((i, week) in training.trainingWeeks.withIndex()){
+            if(week.name == trainingWeekSelected.name){
+                training.trainingWeeks[i] = trainingWeekSelected
+            }
         }
     }
 
@@ -93,10 +231,10 @@ class PlanDetailsActivity : AppCompatActivity() {
             if(day.day == dayOfWeek){
                 etDetailsDistance.setText(day.distance.toString())
                 etDetailsPace.setText(day.pace.toString())
-                etDetailsType.setText(day.type.toString())
                 etDetailsTime.setText(day.time.toString())
             }
         }
+        daySelected = dayOfWeek
     }
 
     private fun initUI() {
@@ -107,6 +245,103 @@ class PlanDetailsActivity : AppCompatActivity() {
         tvDaySelected = tvMonday
         cardDaySelected = cardMonday
         showDayInformation(DayOfWeek.MONDAY)
+        val adapter = ArrayAdapter(this,R.layout.spinner_item, getWeeksNames())
+        adapter.setDropDownViewResource(R.layout.spinner_item)
+        spWeekSelect.adapter = adapter
+        adapterType = ArrayAdapter(this,R.layout.spinner_item_types, SessionType.values())
+        adapterType.setDropDownViewResource(R.layout.spinner_item_types)
+        spDetailsType.adapter = adapterType
+        spDetailsType.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                val type = SessionType.valueOf(parent?.getItemAtPosition(pos).toString())
+                for((i,day) in trainingWeekSelected.days.withIndex()){
+                    if(day.day == daySelected){
+                        trainingWeekSelected.days[i].type = type
+                        changeVisibleET(type)
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+        setType()
+        spWeekSelect.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                val weekName = parent?.getItemAtPosition(pos).toString()
+                for(week in training.trainingWeeks){
+                    if(week.name == weekName){
+                        isChanging = true
+                        trainingWeekSelected = week
+                        showDayInformation(daySelected)
+                        setType()
+                        isChanging = false
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                parent?.setSelection(0)
+            }
+        }
+        changeEnableET(isCreating)
+        if(isCreating){
+            btnEditCreatePlan.text = getString(R.string.create_new_plan)
+        }else{
+            btnEditCreatePlan.text = getString(R.string.edit_plan)
+        }
+    }
+
+    private fun setType() {
+        for(day in trainingWeekSelected.days){
+            if (day.day == daySelected){
+                spDetailsType.setSelection(adapterType.getPosition(day.type))
+                changeVisibleET(day.type)
+            }
+        }
+    }
+
+    private fun changeVisibleET(type: SessionType) {
+        when(type){
+            SessionType.REST->{
+                tvDetailsDistance.isVisible = false
+                tvDetailsTime.isVisible = false
+                tvDetailsPace.isVisible = false
+                etDetailsTime.isVisible = false
+                etDetailsPace.isVisible = false
+                etDetailsDistance.isVisible = false
+            }
+            SessionType.WALK,SessionType.TROT,SessionType.REST_OR_TROT_WALK->{
+                etDetailsPace.isVisible = false
+                tvDetailsPace.isVisible = false
+                etDetailsDistance.isVisible = true
+                etDetailsTime.isVisible = true
+                tvDetailsDistance.isVisible = true
+                tvDetailsTime.isVisible = true
+            }
+            else -> {
+                etDetailsPace.isVisible = true
+                tvDetailsPace.isVisible = true
+                etDetailsDistance.isVisible = true
+                etDetailsTime.isVisible = true
+                tvDetailsDistance.isVisible = true
+                tvDetailsTime.isVisible = true
+            }
+        }
+    }
+
+    private fun changeEnableET(isEditable:Boolean){
+        etDetailsTime.isEnabled = isEditable
+        etDetailsPace.isEnabled = isEditable
+        etDetailsDistance.isEnabled = isEditable
+    }
+
+    private fun getWeeksNames(): List<String> {
+        val weeksNames = mutableListOf<String>()
+        for(week in training.trainingWeeks){
+            weeksNames.add(week.name)
+        }
+        return weeksNames.toList()
     }
 
     private fun initComponent() {
@@ -128,6 +363,46 @@ class PlanDetailsActivity : AppCompatActivity() {
         etDetailsDistance = findViewById(R.id.etDetailsDistance)
         etDetailsPace = findViewById(R.id.etDetailsPace)
         etDetailsTime = findViewById(R.id.etDetailsTime)
-        etDetailsType = findViewById(R.id.etDetailsType)
+        spDetailsType = findViewById(R.id.spDetailsType)
+        spWeekSelect = findViewById(R.id.spWeekSelect)
+        btnEditCreatePlan = findViewById(R.id.btnEditCreatePlan)
+        tvDetailsDistance = findViewById(R.id.tvDetailsDistance)
+        tvDetailsPace = findViewById(R.id.tvDetailsPace)
+        tvDetailsTime = findViewById(R.id.tvDetailsTime)
+
+    }
+
+    private fun savePlan(plansRef: CollectionReference, training:Training){
+        val plan =  plansRef.document((training.name))
+        plan.set(hashMapOf("title" to training.name, "isActive" to training.isActive)).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                var i = 0
+                while (i < training.trainingWeeks.size) {
+                    val week = training.trainingWeeks[i]
+                    val weekRef = plan.collection("weeks").document(week.name)
+                    weekRef.set(
+                        hashMapOf("title" to week.name)
+                    )
+                    for (day in week.days) {
+                        weekRef.collection("days").document(day.day.toString()).set(
+                            hashMapOf(
+                                "type" to day.type,
+                                "time" to day.time,
+                                "distance" to day.distance,
+                                "pace" to day.pace
+                            )
+                        )
+                    }
+                    i++
+                }
+                startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                    putExtra("email", email)
+                })
+            } else if (task.isCanceled) {
+                Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 }

@@ -14,6 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/background_button"
+        android:gravity="fill_horizontal"
         >
         <TextView
             android:id="@+id/tvTrainingDetailsName"
@@ -26,7 +27,18 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginVertical="15sp"
             android:layout_marginLeft="5dp"
+            tools:text="Prueba"
             />
+        <Spinner
+            android:id="@+id/spWeekSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+
+            />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/lyTrainingDays"
@@ -195,6 +207,7 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/lyTrainingDayData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/lyTrainingDays2"
@@ -211,8 +224,8 @@
             android:textColor="@color/light_grey"
             android:textSize="15sp"
             />
-        <EditText
-            android:id="@+id/etDetailsType"
+        <Spinner
+            android:id="@+id/spDetailsType"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
@@ -264,6 +277,16 @@
             />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-    
+
+    <Button
+        android:id="@+id/btnEditCreatePlan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/lyTrainingDayData"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="Prueba"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

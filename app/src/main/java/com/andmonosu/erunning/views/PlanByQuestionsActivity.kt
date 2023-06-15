@@ -10,6 +10,8 @@ import androidx.core.view.isVisible
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.models.Training
 import com.andmonosu.erunning.models.TrainingProvider
+import com.google.firebase.firestore.AggregateSource
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
 class PlanByQuestionsActivity : AppCompatActivity() {
@@ -31,7 +33,6 @@ class PlanByQuestionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_by_questions)
         email = intent.extras?.getString("email").toString()
-        Log.i("email", email)
         initComponents()
         initListeners()
         initUI()
@@ -55,33 +56,9 @@ class PlanByQuestionsActivity : AppCompatActivity() {
                 firstClicked=1
             }else if(answer2.isEmpty()){
                 if(firstClicked==1){
-                    val training = Training(TrainingProvider.plan5km8weeks,"Plan 2", false)
-                    val plan =  db.collection("users").document(email?:"").collection("plans").document("2")
-                        plan.set(hashMapOf("distance" to answer1, "duration" to btnOpt1.text.toString(), "title" to training.name, "isActive" to training.isActive)).addOnCompleteListener { task ->
-                        if(task.isSuccessful){
-                            Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
-                            var i = 0
-                            while (i<training.trainingWeeks.size){
-                                val week = training.trainingWeeks[i]
-                                val weekRef =  plan.collection("weeks").document((i+1).toString())
-                                weekRef.set(
-                                    hashMapOf("title" to "Semana "+i)
-                                )
-                                for(day in week.days){
-                                    weekRef.collection("days").document(day.day.toString()).set(
-                                        hashMapOf("type" to day.type, "time" to day.time, "distance" to day.distance, "pace" to day.pace)
-                                    )
-                                }
-                                i++
-                            }
-                            startActivity(Intent(this, MyPlansActivity::class.java).apply {
-                                putExtra("email",  email)
-                            })
-                        }else if(task.isCanceled) {
-                            Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }
+                    val plansRef = db.collection("users").document(email?:"").collection("plans")
+                    val training = Training(TrainingProvider.plan5km8weeks, isActive = false)
+                    savePlan(plansRef,training)
 
 
                 }else if(firstClicked==2){
@@ -302,6 +279,39 @@ class PlanByQuestionsActivity : AppCompatActivity() {
                                 .show()
                         }
                     }
+            }
+        }
+    }
+
+    private fun savePlan(plansRef:CollectionReference , training:Training){
+        plansRef.count().get(AggregateSource.SERVER).addOnCompleteListener {count->
+            val elements = count.result.count+1
+            training.name = "Plan ${elements}"
+            val plan =  plansRef.document((elements).toString())
+            plan.set(hashMapOf("distance" to answer1, "duration" to btnOpt1.text.toString(), "title" to training.name, "isActive" to training.isActive)).addOnCompleteListener { task ->
+                if(task.isSuccessful){
+                    Toast.makeText(this, "Plan guardado correctamente", Toast.LENGTH_SHORT).show()
+                    var i = 0
+                    while (i<training.trainingWeeks.size){
+                        val week = training.trainingWeeks[i]
+                        val weekRef =  plan.collection("weeks").document((i+1).toString())
+                        weekRef.set(
+                            hashMapOf("title" to week.name)
+                        )
+                        for(day in week.days){
+                            weekRef.collection("days").document(day.day.toString()).set(
+                                hashMapOf("type" to day.type, "time" to day.time, "distance" to day.distance, "pace" to day.pace)
+                            )
+                        }
+                        i++
+                    }
+                    startActivity(Intent(this, MyPlansActivity::class.java).apply {
+                        putExtra("email",  email)
+                    })
+                }else if(task.isCanceled) {
+                    Toast.makeText(this, "Error al guardar tu plan", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
     }
