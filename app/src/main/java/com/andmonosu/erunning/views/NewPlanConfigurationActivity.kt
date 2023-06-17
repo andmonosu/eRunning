@@ -60,7 +60,7 @@ class NewPlanConfigurationActivity : AppCompatActivity() {
                     TrainingDay(DayOfWeek.FRIDAY,SessionType.CC),
                     TrainingDay(DayOfWeek.SATURDAY,SessionType.CC),
                     TrainingDay(DayOfWeek.SUNDAY,SessionType.CC),
-                ),"Semana $i")
+                ),"$i")
                 training.trainingWeeks.add(week)
                 i++
             }

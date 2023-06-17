@@ -47,4 +47,5 @@
     <string name="new_plan_weeks">Semanas</string>
     <string name="create_new_plan">Crear Plan</string>
     <string name="edit_plan">Editar Plan</string>
+    <string name="make_active">Convertir en plan activo</string>
 </resources>
