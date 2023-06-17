@@ -4,14 +4,13 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
-import com.andmonosu.erunning.views.RegisterActivity
+import com.andmonosu.erunning.views.RegisterPersonalDataActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -48,11 +47,10 @@ class AuthActivity : AppCompatActivity() {
     private fun session() {
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         val email = prefs.getString("email", null)
-        var provider = prefs.getString("provider", null)
 
-        if (email != null && provider != null) {
+        if (email != null) {
             authLayout.visibility = View.INVISIBLE
-            showHome(email, ProviderType.valueOf(provider))
+            showHome(email)
         }
     }
 
@@ -70,17 +68,7 @@ class AuthActivity : AppCompatActivity() {
         val email = etEmail.text
         val password = etPassword.text
         btnRegister.setOnClickListener {
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                FirebaseAuth.getInstance()
-                    .createUserWithEmailAndPassword(email.toString(), password.toString())
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            showRegister(it.result?.user?.email ?: "", ProviderType.BASIC)
-                        } else {
-                            showAlert()
-                        }
-                    }
-            }
+            showRegister()
         }
 
         btnLogin.setOnClickListener {
@@ -89,7 +77,7 @@ class AuthActivity : AppCompatActivity() {
                     .signInWithEmailAndPassword(email.toString(), password.toString())
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
-                            showHome(it.result?.user?.email ?: "", ProviderType.BASIC)
+                            showHome(it.result?.user?.email ?: "")
                         } else {
                             showAlert()
                         }
@@ -105,20 +93,16 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun showHome(email: String, provider: ProviderType) {
+    private fun showHome(email: String) {
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra("email", email)
-            putExtra("provider", provider.name)
         }
         startActivity(intent)
 
     }
 
-    private fun showRegister(email: String, provider: ProviderType) {
-        val intent = Intent(this, RegisterActivity::class.java).apply {
-            putExtra("email", email)
-            putExtra("provider", provider.name)
-        }
+    private fun showRegister() {
+        val intent = Intent(this, RegisterPersonalDataActivity::class.java)
         startActivity(intent)
 
     }
@@ -145,7 +129,7 @@ class AuthActivity : AppCompatActivity() {
                     FirebaseAuth.getInstance().signInWithCredential(credential)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
-                                showHome(account.email ?: "", ProviderType.GOOGLE)
+                                showHome(account.email ?: "")
                             } else {
                                 showAlert()
                             }

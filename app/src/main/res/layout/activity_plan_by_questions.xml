@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.PlanByQuestionsActivity">
+
+    <TextView
+        android:id="@+id/tvObjective"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/objective"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="100dp"
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/lyOpt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvObjective"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
+        android:gravity="center">
+        <Button
+            android:id="@+id/btnOpt1"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            tools:text="Correr 5km o menos"
+            android:background="@drawable/rounded_button"
+            />
+        <Button
+            android:id="@+id/btnOpt2"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            tools:text="Correr 5-10km"
+            android:background="@drawable/rounded_button"
+            android:layout_marginTop="15dp"
+            />
+        <Button
+            android:id="@+id/btnOpt3"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            tools:text="Correr media maratón"
+            android:background="@drawable/rounded_button"
+            android:layout_marginTop="15dp"
+            />
+        <Button
+            android:id="@+id/btnOpt4"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            tools:text="Correr una maratón"
+            android:background="@drawable/rounded_button"
+            android:layout_marginTop="15dp"
+            />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>
