@@ -75,7 +75,7 @@
                             android:id="@+id/etEmail"
                             android:layout_width="250dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
                             android:hint="@string/your_email"
                             />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -101,7 +101,7 @@
                             android:id="@+id/etGender"
                             android:layout_width="250dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
                             android:hint="@string/your_gender"
                             />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -127,7 +127,7 @@
                             android:id="@+id/etAge"
                             android:layout_width="250dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
                             android:hint="@string/your_age"
                             />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -153,7 +153,7 @@
                             android:id="@+id/etWeight"
                             android:layout_width="250dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
                             android:hint="@string/your_weight"
                             />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -178,7 +178,7 @@
                             android:id="@+id/etHeight"
                             android:layout_width="250dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
                             android:hint="@string/your_height"
                             />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -204,7 +204,7 @@
                             android:id="@+id/etActivity"
                             android:layout_width="250dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
                             android:hint="@string/your_activity"
                             />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -221,7 +221,6 @@
                     />
                 <Button
                     android:id="@+id/btnPlans"
-
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:text="@string/my_plans"
