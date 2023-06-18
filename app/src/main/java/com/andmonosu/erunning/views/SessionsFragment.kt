@@ -1,13 +1,12 @@
 package com.andmonosu.erunning.views
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.children
+import androidx.fragment.app.Fragment
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.SessionObjectiveState
 import com.andmonosu.erunning.databinding.FragmentSessionsBinding
@@ -21,6 +20,7 @@ import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
@@ -75,35 +75,52 @@ class SessionsFragment : Fragment() {
                 textView.text = data.date.dayOfMonth.toString()
                 if (data.position == DayPosition.MonthDate) {
                     textView.visibility = View.VISIBLE
-                        db.collection("users").document(email ?: "").collection("sessions")
-                            .document(data.date.toString()).get().addOnSuccessListener { result ->
+                    db.collection("users").document(email ?: "").collection("sessions")
+                        .document(data.date.toString()).get().addOnSuccessListener { result ->
+                        if(result.exists()){
                             val state = (result.get("state") as String?)?.let {
                                 SessionObjectiveState.valueOf(
                                     it
                                 )
                             }
-                                if (data.date == selectedDate&&state!=null) {
-                                    textView.setTextColor(resources.getColor(R.color.white))
-                                    textView.setBackgroundResource(R.drawable.session_selected_background)
-                                    pruebaTv.text = (result.get("hola") as String?)
-                                } else {
-                                    when (state) {
-                                        SessionObjectiveState.SUCCESS -> {
-                                            textView.setTextColor(resources.getColor(R.color.white))
-                                            textView.setBackgroundResource(R.drawable.session_succed_background)
-                                        }
-                                        SessionObjectiveState.NOT_SUCCESS -> {
-                                            textView.setTextColor(resources.getColor(R.color.white))
-                                            textView.setBackgroundResource(R.drawable.session_not_succed_background)
-                                        }
-                                        SessionObjectiveState.NOT_TRAINED -> {
-                                            textView.setTextColor(resources.getColor(R.color.white))
-                                            textView.setBackgroundResource(R.drawable.session_not_trained_background)
-                                        }
-                                        else -> {}
+                            if (data.date == selectedDate&&state!=null) {
+                                textView.setTextColor(resources.getColor(R.color.white))
+                                textView.setBackgroundResource(R.drawable.session_selected_background)
+                                pruebaTv.text = (result.get("hola") as String?)
+                            } else {
+                                when (state) {
+                                    SessionObjectiveState.SUCCESS -> {
+                                        textView.setTextColor(resources.getColor(R.color.white))
+                                        textView.setBackgroundResource(R.drawable.session_succed_background)
                                     }
+                                    SessionObjectiveState.NOT_SUCCESS -> {
+                                        textView.setTextColor(resources.getColor(R.color.white))
+                                        textView.setBackgroundResource(R.drawable.session_not_succed_background)
+                                    }
+                                    SessionObjectiveState.REST -> {
+                                        textView.setTextColor(resources.getColor(R.color.white))
+                                        textView.setBackgroundResource(R.drawable.session_rest_background)
+                                    }
+                                    SessionObjectiveState.PARTIAL_SUCCESS -> {
+                                        textView.setTextColor(resources.getColor(R.color.white))
+                                        textView.setBackgroundResource(R.drawable.session_partial_success_background)
+                                    }
+                                    else -> {}
                                 }
                             }
+                        }else{
+                            if(data.date.isBefore(LocalDate.now())||data.date.isEqual(LocalDate.now())){
+                                if (data.date == selectedDate) {
+                                    textView.setTextColor(resources.getColor(R.color.white))
+                                    textView.setBackgroundResource(R.drawable.session_selected_background)
+                                    pruebaTv.text = "No ha entrenado"
+                                }else{
+                                    textView.setTextColor(resources.getColor(R.color.white))
+                                    textView.setBackgroundResource(R.drawable.session_not_trained_background)
+                                }
+                            }
+                        }
+                        }
                 }else {
                     textView.visibility = View.INVISIBLE
                 }

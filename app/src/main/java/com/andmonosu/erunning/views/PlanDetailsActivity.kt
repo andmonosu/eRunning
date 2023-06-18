@@ -18,7 +18,6 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.andmonosu.erunning.R
-import com.andmonosu.erunning.adapter.TrainingAdapter
 import com.andmonosu.erunning.models.SessionType
 import com.andmonosu.erunning.models.Training
 import com.andmonosu.erunning.models.TrainingWeek
@@ -26,7 +25,6 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_plan_details.tvDetailsDistance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

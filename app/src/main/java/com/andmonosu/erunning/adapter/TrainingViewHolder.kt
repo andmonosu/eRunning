@@ -1,10 +1,6 @@
 package com.andmonosu.erunning.adapter
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.andmonosu.erunning.R

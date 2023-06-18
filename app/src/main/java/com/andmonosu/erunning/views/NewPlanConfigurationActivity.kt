@@ -1,12 +1,11 @@
 package com.andmonosu.erunning.views
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.cardview.widget.CardView
+import androidx.appcompat.app.AppCompatActivity
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.models.SessionType
 import com.andmonosu.erunning.models.Training

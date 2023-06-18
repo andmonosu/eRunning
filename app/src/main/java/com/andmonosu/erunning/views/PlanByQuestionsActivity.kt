@@ -1,11 +1,10 @@
 package com.andmonosu.erunning.views
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.models.Training
