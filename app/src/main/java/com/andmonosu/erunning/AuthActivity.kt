@@ -2,13 +2,12 @@ package com.andmonosu.erunning
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.andmonosu.erunning.views.RegisterPersonalDataActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn

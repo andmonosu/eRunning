@@ -1,10 +1,7 @@
 package com.andmonosu.erunning.adapter
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.databinding.ItemTrainingBinding
@@ -16,6 +13,9 @@ class TrainingViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
     fun render(trainingModel: Training, onClickListener:(Training) -> Unit){
         binding.tvTrainingName.text = trainingModel.name
+        if(trainingModel.isActive){
+            binding.tvTrainingName.setTextColor(ContextCompat.getColor(itemView.context, R.color.background_button))
+        }
         itemView.setOnClickListener { onClickListener(trainingModel) }
     }
 }

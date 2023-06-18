@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -20,10 +21,16 @@ import com.andmonosu.erunning.R
 import com.andmonosu.erunning.models.SessionType
 import com.andmonosu.erunning.models.Training
 import com.andmonosu.erunning.models.TrainingWeek
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_plan_details.tvDetailsDistance
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
+import java.time.LocalDate
+import kotlin.coroutines.suspendCoroutine
 
 
 class PlanDetailsActivity : AppCompatActivity() {
@@ -57,6 +64,8 @@ class PlanDetailsActivity : AppCompatActivity() {
     private lateinit var tvDetailsTime:TextView
     private lateinit var spWeekSelect: Spinner
     private lateinit var btnEditCreatePlan:Button
+    private lateinit var btnMakeActivePlan:Button
+
     private var isCreating:Boolean = false
     private var isEditing:Boolean = false
     private lateinit var email:String
@@ -207,6 +216,57 @@ class PlanDetailsActivity : AppCompatActivity() {
                 savePlan(plansRef,training)
             }
         }
+        btnMakeActivePlan.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    makePlanActive()
+                } catch (exception: Exception) {
+                    Log.e("Error", exception.message.toString())
+                }
+            }
+        }
+    }
+    
+    private suspend fun makePlanActive():Void = suspendCoroutine{continuation ->
+        val deleteTasks = mutableListOf<Task<Void>>()
+        db.collection("users").document(email).collection("programmed sessions").get().addOnSuccessListener {documents ->
+            for (document in documents){
+                deleteTasks.add(document.reference.delete())
+            }
+        }
+
+        Tasks.whenAllSuccess<Void>(deleteTasks).addOnSuccessListener {
+            val plansRef = db.collection("users").document(email).collection("plans")
+            plansRef.whereEqualTo("isActive",true).get().addOnSuccessListener {documents->
+                for(document in documents){
+                    val activeTraining = Training(name = document.data["title"].toString(), isActive = false)
+                    plansRef.document(activeTraining.name).set(
+                        hashMapOf("title" to activeTraining.name, "isActive" to activeTraining.isActive)
+                    )
+                }
+            }.addOnSuccessListener {
+                var startDate = LocalDate.now()
+                while (startDate.dayOfWeek != DayOfWeek.MONDAY){
+                    startDate = startDate.plusDays(1)
+                }
+                for(week in training.trainingWeeks.sortedBy { n -> n.name.toIntOrNull() }){
+                    for(day in week.days.sortedBy { n -> n.day }){
+                        db.collection("users").document(email).collection("programmed sessions").document(startDate.toString()).set(
+                            hashMapOf("time" to day.time, "distance" to day.distance, "pace" to day.pace, "type" to day.type)
+                        )
+                        startDate = startDate.plusDays(1)
+                    }
+                }
+                val plansRef2 = db.collection("users").document(email).collection("plans")
+                training.isActive = true
+                savePlan(plansRef2,training)
+                btnMakeActivePlan.isVisible = false
+
+            }
+        }.addOnFailureListener { exception ->
+            continuation.resumeWith(Result.failure(exception))
+            return@addOnFailureListener
+        }
     }
 
     private fun changeWeekValue(){
@@ -238,6 +298,8 @@ class PlanDetailsActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
+        btnMakeActivePlan.isVisible = !training.isActive
+        btnMakeActivePlan.text = getString(R.string.make_active)
         tvTrainingDetailsName.text = training.name
         trainingWeekSelected = training.trainingWeeks[0]
         cardMonday.setCardBackgroundColor(ContextCompat.getColor(this,R.color.background_button))
@@ -270,7 +332,7 @@ class PlanDetailsActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 val weekName = parent?.getItemAtPosition(pos).toString()
                 for(week in training.trainingWeeks){
-                    if(week.name == weekName){
+                    if(week.name == weekName.split(" ")[1]){
                         isChanging = true
                         trainingWeekSelected = week
                         showDayInformation(daySelected)
@@ -339,7 +401,8 @@ class PlanDetailsActivity : AppCompatActivity() {
     private fun getWeeksNames(): List<String> {
         val weeksNames = mutableListOf<String>()
         for(week in training.trainingWeeks){
-            weeksNames.add(week.name)
+            val name = week.name
+            weeksNames.add("Semana $name")
         }
         return weeksNames.toList()
     }
@@ -366,6 +429,7 @@ class PlanDetailsActivity : AppCompatActivity() {
         spDetailsType = findViewById(R.id.spDetailsType)
         spWeekSelect = findViewById(R.id.spWeekSelect)
         btnEditCreatePlan = findViewById(R.id.btnEditCreatePlan)
+        btnMakeActivePlan = findViewById(R.id.btnMakeActivePlan)
         tvDetailsDistance = findViewById(R.id.tvDetailsDistance)
         tvDetailsPace = findViewById(R.id.tvDetailsPace)
         tvDetailsTime = findViewById(R.id.tvDetailsTime)
