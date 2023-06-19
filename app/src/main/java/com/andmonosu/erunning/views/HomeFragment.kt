@@ -2,17 +2,16 @@ package com.andmonosu.erunning.views
 
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Chronometer
-import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.andmonosu.erunning.R
-import com.google.android.gms.maps.CameraUpdateFactory
+import com.andmonosu.erunning.SessionObjectiveState
+import com.andmonosu.erunning.models.SessionType
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
@@ -82,10 +81,52 @@ class HomeFragment : Fragment() {
                 mapsFragment.stopTracking()
                 val distance = mapsFragment.ui.value?.formattedDistance
                 val pace = mapsFragment.ui.value?.formattedPace
-                db.collection("users").document(email?:"").collection("sessions").document(dateNow.toString()).set(
-                    hashMapOf("distancia" to distance,"ritmo" to pace,"tiempo" to "$timeElapsedInMinutes min")
-                ).addOnSuccessListener {
-                    Toast.makeText(requireActivity(), "Sesión guardada correctamente", Toast.LENGTH_SHORT).show()
+                db.collection("users").document(email?:"").collection("programmed sessions").document(dateNow.toString()).get().addOnSuccessListener { programmedSesion ->
+                    val type = SessionType.valueOf(programmedSesion.get("type").toString())
+                    val distanceProgrammed = programmedSesion.data?.get("distance").toString().toDouble()
+                    val paceProgrammed = programmedSesion.get("pace").toString().toDouble()
+                    val timeProgrammed = programmedSesion.get("time").toString().toDouble()
+                    var state:SessionObjectiveState = SessionObjectiveState.REST
+                    when(type){
+                        SessionType.CC->{
+                            if (distance != null&&pace != null) {
+                                state = if(distance.split(" ")[0].toDouble()>=distanceProgrammed&& pace.split(" ")[0].toDouble()<= paceProgrammed && timeElapsedInMinutes>=timeProgrammed){
+                                    SessionObjectiveState.SUCCESS
+                                }else if(distance.split(" ")[0].toDouble()>=distanceProgrammed || pace.split(" ")[0].toDouble()<= paceProgrammed || timeElapsedInMinutes>=timeProgrammed){
+                                    SessionObjectiveState.PARTIAL_SUCCESS
+                                }else{
+                                    SessionObjectiveState.NOT_SUCCESS
+                                }
+                            }
+                        }
+                        SessionType.TROT->{
+                            if(distance != null){
+                                state = if(distance.split(" ")[0].toDouble()>=distanceProgrammed){
+                                    SessionObjectiveState.SUCCESS
+                                }else{
+                                    SessionObjectiveState.NOT_SUCCESS
+                                }
+                            }
+                        }
+                        SessionType.WALK, SessionType.PROGRESSIVE->{
+                            state = if(timeElapsedInMinutes>=timeProgrammed){
+                                SessionObjectiveState.SUCCESS
+                            }else{
+                                SessionObjectiveState.NOT_SUCCESS
+                            }
+                        }SessionType.REST->{
+                            state = SessionObjectiveState.REST
+                        }
+                        else -> {
+                            state = SessionObjectiveState.SUCCESS
+                        }
+                    }
+
+                    db.collection("users").document(email?:"").collection("sessions").document(dateNow.toString()).set(
+                        hashMapOf("distance" to distance,"pace" to pace,"time" to "$timeElapsedInMinutes min", "state" to state, "type" to type)
+                    ).addOnSuccessListener {
+                        Toast.makeText(requireActivity(), "Sesión guardada correctamente", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 chronometer.setBase(SystemClock.elapsedRealtime())
             }

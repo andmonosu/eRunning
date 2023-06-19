@@ -1,10 +1,7 @@
 package com.andmonosu.erunning.views
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
