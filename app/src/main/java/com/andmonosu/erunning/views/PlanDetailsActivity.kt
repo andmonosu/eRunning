@@ -251,9 +251,15 @@ class PlanDetailsActivity : AppCompatActivity() {
                 }
                 for(week in training.trainingWeeks.sortedBy { n -> n.name.toIntOrNull() }){
                     for(day in week.days.sortedBy { n -> n.day }){
-                        db.collection("users").document(email).collection("programmed sessions").document(startDate.toString()).set(
-                            hashMapOf("time" to day.time, "distance" to day.distance, "pace" to day.pace, "type" to day.type)
-                        )
+                        if(day.type==SessionType.REST){
+                            db.collection("users").document(email).collection("sessions").document(startDate.toString()).set(
+                                hashMapOf("state" to day.type)
+                            )
+                        }else{
+                            db.collection("users").document(email).collection("programmed sessions").document(startDate.toString()).set(
+                                hashMapOf("time" to day.time, "distance" to day.distance, "pace" to day.pace, "type" to day.type)
+                            )
+                        }
                         startDate = startDate.plusDays(1)
                     }
                 }
