@@ -1,8 +1,6 @@
 package com.andmonosu.erunning.views
 
 import android.view.View
-import android.widget.TextView
-import com.andmonosu.erunning.R
 import com.andmonosu.erunning.databinding.CalendarDayLayoutBinding
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition

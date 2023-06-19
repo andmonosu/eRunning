@@ -37,8 +37,10 @@
     <string name="distance_value">%d metros</string>
     <string name="pace_value">%f min/km</string>
     <string name="distance">Distancia</string>
+    <string name="distance_session">Distancia Recorrida</string>
     <string name="details_distance">Distancia que se va a correr:</string>
     <string name="pace">Ritmo medio</string>
+    <string name="pace_session">Ritmo medio de carrera</string>
     <string name="details_pace">Ritmo medio de carrera</string>
     <string name="objective">¿Cuál es tu objetivo?</string>
     <string name="details_time">Duración del entrenamiento</string>
@@ -47,4 +49,7 @@
     <string name="new_plan_weeks">Semanas</string>
     <string name="create_new_plan">Crear Plan</string>
     <string name="edit_plan">Editar Plan</string>
+    <string name="make_active">Convertir en plan activo</string>
+    <string name="time_session">Duración del entrenamiento</string>
+    <string name="type_session">Tipo de entrenamiento</string>
 </resources>
