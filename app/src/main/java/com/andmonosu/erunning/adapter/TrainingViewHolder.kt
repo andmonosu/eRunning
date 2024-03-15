@@ -5,7 +5,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.databinding.ItemTrainingBinding
-import com.andmonosu.erunning.models.Training
+import com.andmonosu.erunning.data.model.Training
 
 class TrainingViewHolder(view: View) : RecyclerView.ViewHolder(view){
 

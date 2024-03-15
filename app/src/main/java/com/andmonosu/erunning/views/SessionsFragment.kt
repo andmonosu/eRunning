@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.SessionObjectiveState
 import com.andmonosu.erunning.databinding.FragmentSessionsBinding
-import com.andmonosu.erunning.models.SessionType
+import com.andmonosu.erunning.data.model.SessionType
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kizitonwose.calendar.core.CalendarDay
@@ -193,7 +193,7 @@ class SessionsFragment : Fragment() {
         monthCalendarView.monthScrollListener = { updateMonth()}
     }
 
-    private fun fillTextViews(type:SessionType,result:DocumentSnapshot){
+    private fun fillTextViews(type: SessionType, result:DocumentSnapshot){
         when (type) {
             SessionType.REST->{
                 tvTypeSession.text = "Descanso"

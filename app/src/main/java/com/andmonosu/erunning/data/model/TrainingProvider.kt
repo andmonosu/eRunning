@@ -1,4 +1,4 @@
-package com.andmonosu.erunning.models
+package com.andmonosu.erunning.data.model
 
 import java.time.DayOfWeek
 

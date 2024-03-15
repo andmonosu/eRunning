@@ -18,9 +18,9 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.andmonosu.erunning.R
-import com.andmonosu.erunning.models.SessionType
-import com.andmonosu.erunning.models.Training
-import com.andmonosu.erunning.models.TrainingWeek
+import com.andmonosu.erunning.data.model.SessionType
+import com.andmonosu.erunning.data.model.Training
+import com.andmonosu.erunning.data.model.TrainingWeek
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
@@ -251,7 +251,7 @@ class PlanDetailsActivity : AppCompatActivity() {
                 }
                 for(week in training.trainingWeeks.sortedBy { n -> n.name.toIntOrNull() }){
                     for(day in week.days.sortedBy { n -> n.day }){
-                        if(day.type==SessionType.REST){
+                        if(day.type== SessionType.REST){
                             db.collection("users").document(email).collection("sessions").document(startDate.toString()).set(
                                 hashMapOf("state" to day.type)
                             )
@@ -379,7 +379,7 @@ class PlanDetailsActivity : AppCompatActivity() {
                 etDetailsPace.isVisible = false
                 etDetailsDistance.isVisible = false
             }
-            SessionType.WALK,SessionType.TROT,SessionType.REST_OR_TROT_WALK->{
+            SessionType.WALK, SessionType.TROT, SessionType.REST_OR_TROT_WALK->{
                 etDetailsPace.isVisible = false
                 tvDetailsPace.isVisible = false
                 etDetailsDistance.isVisible = true
@@ -442,7 +442,7 @@ class PlanDetailsActivity : AppCompatActivity() {
 
     }
 
-    private fun savePlan(plansRef: CollectionReference, training:Training){
+    private fun savePlan(plansRef: CollectionReference, training: Training){
         val plan =  plansRef.document((training.name))
         plan.set(hashMapOf("title" to training.name, "isActive" to training.isActive)).addOnCompleteListener { task ->
             if (task.isSuccessful) {

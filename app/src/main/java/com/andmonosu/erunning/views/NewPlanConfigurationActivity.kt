@@ -7,10 +7,10 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.andmonosu.erunning.R
-import com.andmonosu.erunning.models.SessionType
-import com.andmonosu.erunning.models.Training
-import com.andmonosu.erunning.models.TrainingDay
-import com.andmonosu.erunning.models.TrainingWeek
+import com.andmonosu.erunning.data.model.SessionType
+import com.andmonosu.erunning.data.model.Training
+import com.andmonosu.erunning.data.model.TrainingDay
+import com.andmonosu.erunning.data.model.TrainingWeek
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.time.DayOfWeek
 

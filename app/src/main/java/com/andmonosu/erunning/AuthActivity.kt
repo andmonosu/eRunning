@@ -3,12 +3,16 @@ package com.andmonosu.erunning
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.viewModels
+import com.andmonosu.erunning.ui.viewmodel.UserViewModel
 import com.andmonosu.erunning.views.RegisterPersonalDataActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -20,6 +24,9 @@ import com.google.firebase.auth.GoogleAuthProvider
 class AuthActivity : AppCompatActivity() {
 
     private val GOOGLE_SIGN_IN = 100
+
+    private val userViewModel: UserViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
@@ -37,7 +44,7 @@ class AuthActivity : AppCompatActivity() {
 
     private lateinit var btnLogin: Button
     private lateinit var btnRegister: Button
-    private lateinit var etEmail: EditText
+    private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
 
     private lateinit var btnLoginGoogle: Button
@@ -45,18 +52,18 @@ class AuthActivity : AppCompatActivity() {
 
     private fun session() {
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
-        val email = prefs.getString("email", null)
+        val username = prefs.getString("username", null)
 
-        if (email != null) {
+        if (username != null) {
             authLayout.visibility = View.INVISIBLE
-            showHome(email)
+            showHome(username)
         }
     }
 
     private fun initComponent() {
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
-        etEmail = findViewById(R.id.etEmail)
+        etUsername = findViewById(R.id.etUsername)
         etPassword = findViewById(R.id.etPassword)
         btnLoginGoogle = findViewById(R.id.btnLoginGoogle)
         authLayout = findViewById(R.id.authLayout)
@@ -64,24 +71,31 @@ class AuthActivity : AppCompatActivity() {
 
     private fun initListeners() {
         title = "Autenticación"
-        val email = etEmail.text
+        val username = etUsername.text
         val password = etPassword.text
         btnRegister.setOnClickListener {
             showRegister()
         }
 
         btnLogin.setOnClickListener {
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                FirebaseAuth.getInstance()
-                    .signInWithEmailAndPassword(email.toString(), password.toString())
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            showHome(it.result?.user?.email ?: "")
-                        } else {
-                            showAlert()
+            if (username.isNotEmpty() && password.isNotEmpty()) {
+                userViewModel.onCreate(username.toString())
+                userViewModel.userModel.observe(this) { user ->
+                    Log.i("user", user.toString())
+                }
+                userViewModel.emailString.observe(this){email->
+                    Log.i("email", email)
+                    FirebaseAuth.getInstance()
+                        .signInWithEmailAndPassword(email, password.toString())
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                showHome(username.toString())
+                            } else {
+                                showAlert()
+                            }
                         }
-                    }
-            }
+                }
+                }
         }
         btnLoginGoogle.setOnClickListener {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -92,9 +106,9 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun showHome(email: String) {
+    private fun showHome(username: String) {
         val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra("email", email)
+            putExtra("username", username)
         }
         startActivity(intent)
 

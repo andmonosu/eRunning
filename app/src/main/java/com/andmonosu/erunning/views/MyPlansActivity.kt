@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.andmonosu.erunning.MainActivity
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.adapter.TrainingAdapter
-import com.andmonosu.erunning.models.SessionType
-import com.andmonosu.erunning.models.Training
-import com.andmonosu.erunning.models.TrainingDay
-import com.andmonosu.erunning.models.TrainingWeek
+import com.andmonosu.erunning.data.model.SessionType
+import com.andmonosu.erunning.data.model.Training
+import com.andmonosu.erunning.data.model.TrainingDay
+import com.andmonosu.erunning.data.model.TrainingWeek
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -121,7 +121,7 @@ class MyPlansActivity : AppCompatActivity() {
         }
     }
 
-    private fun onItemSelected(training:Training){
+    private fun onItemSelected(training: Training){
         Toast.makeText(this,training.name, Toast.LENGTH_SHORT).show()
         val intent = Intent(this, PlanDetailsActivity::class.java)
         intent.putExtra("training", training)

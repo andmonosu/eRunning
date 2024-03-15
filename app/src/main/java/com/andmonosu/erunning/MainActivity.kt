@@ -6,7 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.andmonosu.erunning.databinding.ActivityMainBinding
 import com.andmonosu.erunning.views.HomeFragment
-import com.andmonosu.erunning.views.ProfileFragment
+import com.andmonosu.erunning.ui.view.ProfileFragment
 import com.andmonosu.erunning.views.SessionsFragment
 
 class MainActivity : AppCompatActivity() {
@@ -18,20 +18,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val extras = intent.extras
-        val email = extras?.getString("email")
+        val username = extras?.getString("username")
         replaceFragment(HomeFragment().apply {
-            this.arguments = bundleOf("EMAIL_BUNDLE" to email)
+            this.arguments = bundleOf("USERNAME_BUNDLE" to username)
         })
         binding.navBar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.navTraining -> replaceFragment(HomeFragment().apply {
-                    this.arguments = bundleOf("EMAIL_BUNDLE" to email)
+                    this.arguments = bundleOf("USERNAME_BUNDLE" to username)
                 })
                 R.id.navProfile -> replaceFragment(ProfileFragment().apply {
-                    this.arguments = bundleOf("EMAIL_BUNDLE" to email)
+                    this.arguments = bundleOf("USERNAME_BUNDLE" to username)
                 })
                 R.id.navSessions -> replaceFragment(SessionsFragment().apply {
-                    this.arguments = bundleOf("EMAIL_BUNDLE" to email)
+                    this.arguments = bundleOf("USERNAME_BUNDLE" to username)
                 })
                 else -> {
 

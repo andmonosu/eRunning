@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.andmonosu.erunning.R
 import com.andmonosu.erunning.SessionObjectiveState
-import com.andmonosu.erunning.models.SessionType
+import com.andmonosu.erunning.data.model.SessionType
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
@@ -114,7 +114,9 @@ class HomeFragment : Fragment() {
                             }else{
                                 SessionObjectiveState.NOT_SUCCESS
                             }
-                        }SessionType.REST->{
+                        }
+
+                        SessionType.REST->{
                             state = SessionObjectiveState.REST
                         }
                         else -> {

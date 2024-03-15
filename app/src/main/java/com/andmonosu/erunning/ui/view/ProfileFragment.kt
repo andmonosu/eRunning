@@ -1,4 +1,4 @@
-package com.andmonosu.erunning.views
+package com.andmonosu.erunning.ui.view
 
 import android.content.Context
 import android.content.Intent
@@ -12,8 +12,13 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.andmonosu.erunning.AuthActivity
 import com.andmonosu.erunning.R
+import com.andmonosu.erunning.data.model.User
+import com.andmonosu.erunning.ui.viewmodel.UserViewModel
+import com.andmonosu.erunning.views.MyPlansActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -24,9 +29,11 @@ enum class ProviderType {
 }
 
 class ProfileFragment : Fragment() {
-    private var email: String? = null
+    private var username: String? = null
     private var provider: String? = null
     private var db = FirebaseFirestore.getInstance()
+
+    private val userViewModel: UserViewModel by viewModels()
 
     private lateinit var btnLogout: Button
     private lateinit var btnSave: Button
@@ -44,7 +51,7 @@ class ProfileFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            email = it.getString("EMAIL_BUNDLE")
+            username = it.getString("USERNAME_BUNDLE")
             provider = it.getString("PROVIDER_BUNDLE")
         }
     }
@@ -56,13 +63,13 @@ class ProfileFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
         initComponents(view)
         initListener()
-        initUI(email?: "")
-        setup(email ?: "")
+        initUI(username?: "")
+        setup(userViewModel.emailString.value ?: "")
         val prefs =
             activity?.getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
                 ?.edit()
         if (prefs != null) {
-            prefs.putString("email", email)
+            prefs.putString("username", username)
             prefs.apply()
         }
         return view
@@ -71,29 +78,25 @@ class ProfileFragment : Fragment() {
     private fun initListener() {
         btnPlans.setOnClickListener {
             val intent = Intent(activity, MyPlansActivity::class.java).apply {
-                putExtra("email", email)
+                putExtra("email", userViewModel.emailString.value)
             }
             startActivity(intent)
         }
     }
 
-    private fun initUI(email: String) {
-        db.collection("users").document(email).get().addOnSuccessListener { result ->
-            val name = result.get("name") as String
-            val lastName = result.get("lastName") as String
-            tvName.text = "$name $lastName"
-            etEmail.setText(email)
-            etGender.setText(result.get("gender") as String)
-            val age = result.get("age") as Number
-            etAge.setText(age.toString())
-            val height = result.get("height") as Number
-            etHeight.setText(height.toString())
-            val weight = result.get("peso") as Number
-            etWeight.setText(weight.toString())
-            etActivity.setText(result.get("sport activity") as String)
-            val storageRef = FirebaseStorage.getInstance().reference.child("users/$email.jpg")
-            val localFile = File.createTempFile("tempImage","jpg")
-            storageRef.getFile(localFile).addOnSuccessListener{
+    private fun initUI(username: String) {
+        userViewModel.onCreate(username)
+        userViewModel.userModel.observe( viewLifecycleOwner, ) {
+            tvName.text = "${it.name} ${it.lastName}"
+            etEmail.setText(it.email)
+            etGender.setText(it.gender)
+            etAge.setText(it.age.toString())
+            etHeight.setText(it.height.toString())
+            etWeight.setText(it.weight.toString())
+            etActivity.setText(it.sportActivity)
+            val storageRef = FirebaseStorage.getInstance().reference.child("users/${it.email}.jpg")
+            val localFile = File.createTempFile("tempImage", "jpg")
+            storageRef.getFile(localFile).addOnSuccessListener {
                 val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
                 ivProfilePhoto.setImageBitmap(bitmap)
             }
@@ -116,11 +119,9 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
         }
 
-       // btnSave.setOnClickListener{
-       //     db.collection("users").document(email).set(
-         //       hashMapOf("peso" to etWeight.text.toString(),"height" to etHeight.text.toString(),"age" to etAge.text.toString(),"gender" to etGender.text.toString(), "activity" to etActivity.toString())
-       //     )
-     //   }
+        btnSave.setOnClickListener{
+            userViewModel.saveUserModel("andreui", User())
+        }
     }
 
     private fun initComponents(view: View) {

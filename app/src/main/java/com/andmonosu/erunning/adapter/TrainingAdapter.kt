@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.andmonosu.erunning.R
-import com.andmonosu.erunning.models.Training
+import com.andmonosu.erunning.data.model.Training
 
 class TrainingAdapter(private val trainingList:List<Training>, private val onClickListener:(Training) -> Unit) : RecyclerView.Adapter<TrainingViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainingViewHolder {

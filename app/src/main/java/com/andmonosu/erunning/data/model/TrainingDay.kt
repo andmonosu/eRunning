@@ -1,4 +1,4 @@
-package com.andmonosu.erunning.models
+package com.andmonosu.erunning.data.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

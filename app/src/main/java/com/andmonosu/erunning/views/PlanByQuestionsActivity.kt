@@ -7,8 +7,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.andmonosu.erunning.R
-import com.andmonosu.erunning.models.Training
-import com.andmonosu.erunning.models.TrainingProvider
+import com.andmonosu.erunning.data.model.Training
+import com.andmonosu.erunning.data.model.TrainingProvider
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -282,7 +282,7 @@ class PlanByQuestionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun savePlan(plansRef:CollectionReference , training:Training){
+    private fun savePlan(plansRef:CollectionReference , training: Training){
         plansRef.count().get(AggregateSource.SERVER).addOnCompleteListener {count->
             val elements = count.result.count+1
             training.name = "Plan ${elements}"
